@@ -1,0 +1,25 @@
+################## Eureka Configuration ####################
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:3001/eureka/, http://localhost:3002/eureka/, http://localhost:3003/eureka/
+
+################## Application Settings ####################
+server:
+  port: ${PORT:8090}
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        - id: EUREKA-SERVER-CLUSTERED
+          uri: lb://EUREKA-SERVER-CLUSTERED
+          predicates:
+            - Path=/
+
+        - id: SSO-AUTH-SERVER
+          uri: lb://SSO-AUTH-SERVER
+          predicates:
+            - Path=/auth/**
