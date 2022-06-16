@@ -1,57 +1,11 @@
-################## Eureka Configuration ####################
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:3001/eureka/, http://localhost:3002/eureka/, http://localhost:3003/eureka/
-    registry-fetch-interval-seconds: 5
-
 ################## Application Settings ####################
 server:
   port: ${PORT:8090}
 
 spring:
-  application:
-    name: API-GATEWAY
+  config:
+    import: "optional:configserver:http://localhost:8091"
   cloud:
-    gateway:
-      routes:
-        - id: EUREKA-SERVER-CLUSTERED
-          uri: lb://EUREKA-SERVER-CLUSTERED
-          predicates:
-            - Path=/
-          filters:
-            - name: CircuitBreaker
-          args:
-            name: API-GATEWAY
-          metadata:
-            response-timeout: 1000
-            connect-timeout: 50000
-
-        - id: SSO-AUTH-SERVER
-          uri: lb://SSO-AUTH-SERVER
-          predicates:
-            - Path=/auth/**
-          filters:
-            - name: CircuitBreaker
-          args:
-            name: SSO-AUTH-SERVER
-          metadata:
-            response-timeout: 1000
-            connect-timeout: 50000
-  web:
-    resources:
-      add-mappings: true
-
-################## CircuitBreaker Settings ####################
-resilience4j.circuitbreaker:
-  configs:
-    default:
-      slidingWindowSize: 100
-      minimumNumberOfCalls: 10
-      waitDurationInOpenState: 30000
-      failureRateThreshold: 80
-  instances:
-    API-GATEWAY:
-      baseConfig: default
-    SSO-AUTH-SERVER:
-      baseConfig: default
+    config:
+      name: api-gateway,eureka,cloud-bus,springdoc,circuit-breaker
+      profile: local
