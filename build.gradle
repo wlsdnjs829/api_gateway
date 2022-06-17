@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.6.8'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'com.google.cloud.tools.jib' version '2.7.1'
     id 'java'
 }
 
@@ -46,4 +47,23 @@ dependencyManagement {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+
+jib {
+    from {
+        image = 'openjdk:11'
+    }
+    to {
+        image = 'ljw0829/api-gateway-server'
+        tags = ['0.1.0']
+    }
+    container {
+        mainClass = 'com.jinwon.api_gateway.ApiGatewayApplication'
+        creationTime = 'USE_CURRENT_TIMESTAMP'
+        environment = [USE_PROFILE: "local"]
+        format = 'OCI'
+        volumes = ['/tmp']
+        entrypoint = ['java', '-Dspring.profiles.active=${USE_PROFILE}', '-cp', '/app/resources:/app/classes:/app/libs/*', 'com.jinwon.api_gateway.ApiGatewayApplication']
+    }
 }

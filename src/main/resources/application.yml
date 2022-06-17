@@ -2,10 +2,24 @@
 server:
   port: ${PORT:8090}
 
+---
 spring:
   config:
+    activate:
+      on-profile: local
     import: "optional:configserver:http://localhost:8091"
   cloud:
     config:
       name: api-gateway,eureka,cloud-bus,springdoc,circuit-breaker
       profile: local
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+    import: "optional:configserver:http://config-server:8091"
+  cloud:
+    config:
+      name: api-gateway,eureka,cloud-bus,springdoc,circuit-breaker
+      profile: docker
