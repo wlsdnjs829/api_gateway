@@ -2,6 +2,12 @@
 server:
   port: ${PORT:8090}
 
+spring:
+  cloud:
+    gateway:
+      x-forwarded:
+        for-enabled: false
+
 ---
 spring:
   config:
