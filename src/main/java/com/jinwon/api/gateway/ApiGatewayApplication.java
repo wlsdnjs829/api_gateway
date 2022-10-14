@@ -1,4 +1,4 @@
-package com.jinwon.api_gateway;
+package com.jinwon.api.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
